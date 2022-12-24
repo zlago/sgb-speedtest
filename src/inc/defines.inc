@@ -1,0 +1,11 @@
+; defines for opcode bytes? does this comment make sense?
+
+DEF MNEM_NOP     EQU $00
+DEF MNEM_LD_HL_B EQU $70
+DEF MNEM_LD_HL_C EQU $71
+DEF MNEM_LD_HL_D EQU $72
+DEF MNEM_LD_HL_E EQU $73
+DEF MNEM_LD_HL_H EQU $74
+DEF MNEM_LD_HL_L EQU $75
+DEF MNEM_LD_HL_A EQU $77
+DEF MNEM_RET     EQU $c9
