@@ -1,0 +1,13 @@
+*.gb
+*.gbc
+*.sym
+*.map
+*.o
+*.[124]bpp
+*.tilemap
+*.pct
+*.[cs]pal
+*.lnk
+*.txt
+*.pal
+bgb.bat
