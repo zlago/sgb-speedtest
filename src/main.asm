@@ -76,7 +76,30 @@ Test::
 			ld de, wDelayBytes
 			ld b, hCode.end - hBytes
 			call ShortCpy
-	; plot RAM code for the packet
+		; plot the two together
+			; fetch delay bytes for later
+			ld a, [wDelayBytes]
+			ld c, a
+			; fetch pulse bytes for now
+			ld a, [wPulseBytes]
+			ld b, a
+			; calc total bytes
+			scf ; cooler than inc
+			adc a, c ; add two byte counts together
+			ld [wPacketDelayBytes], a ; and store
+			; copy pulse length, b is preloaded with length
+			ld de, wPacketDelayCode
+			ld hl, wPulseCode
+			call ShortCpy
+			; insert the pulse end
+			ld a, MNEM_LD_HL_H ; sets both P14 and P15 HIGH, ending the pulse
+			ld [de], a
+			inc de
+			; copy delay length
+			ld hl, wDelayCode
+			ld b, c ; restore delay bytes
+			call ShortCpy
+	; plot lds for the packet
 	jp PacketWait
 
 SECTION "data", ROMX

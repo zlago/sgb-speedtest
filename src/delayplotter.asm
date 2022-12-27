@@ -6,7 +6,7 @@ DelayPlotter::
 	cp 10 ; check cycles
 	jr nc, .delayCall
 
-	.delayNop ; if a < 10 delay with nops
+.delayNop ; if a < 10 delay with nops
 	; set length
 	ldh [hBytes], a
 	; fill code with nops
@@ -16,7 +16,7 @@ DelayPlotter::
 	ld hl, hCode
 	jp ShortSet ; tail call
 
-	.delayCall ; if a > 10 delay with a CALL
+.delayCall ; if a > 10 delay with a CALL
 	ld b, a ; save for later
 	; set length
 	ld a, 3
