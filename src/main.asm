@@ -16,9 +16,35 @@ SECTION "main", ROM0
 Main::
 	.loop:
 	halt
+	; process length stuff
 	call LengthUpdate
-	; check things
+	; process nonlength stuff
+	ldh a, [hInput1]
+	ld b, a
+	ldh a, [hInput1.diff]
+	and b
+	ld b, a
+	and PADF_B
 	jr .loop
+
+SECTION "reset", ROM0
+Reset::
+	; reset palette
+	ld hl, xPackets.palres
+	call Packet
+	; stall for 4 frames
+	ld a, 4
+	.loop
+	halt
+	push af
+	call LengthUpdate
+	pop af
+	dec a
+	jr nz, .loop
+	jp Main
+
+SECTION "test", ROM0
+Test::
 
 SECTION "data", ROMX
 xScreen2bpp::
@@ -51,8 +77,16 @@ dw $0000, $7fff, $03e0 ; palette 3
 ds 16 - 15, $00 ; pad
 
 SECTION "variables", HRAM
+; pulse and delay lengths
 hPulse:: ds 1
 hDelay:: ds 1
+; used by delay plotter
+hBytes:: ds 1
+hCode:: ds 10
+
+SECTION "code ram", WRAMX
+wRAMCode::
+	ds 4096
 
 SECTION "vram", VRAM[_VRAM]
 align 4

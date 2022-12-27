@@ -2,6 +2,7 @@ INCLUDE "hardware.inc" ; hw defs
 
 SECTION "init", ROM0
 Init:: ; init code should go here
+	ld sp, wStack.origin
 	; init interrupts
 	ld a, IEF_VBLANK
 	ldh [rIE], a
