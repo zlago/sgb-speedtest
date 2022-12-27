@@ -100,6 +100,33 @@ Test::
 			ld b, c ; restore delay bytes
 			call ShortCpy
 	; plot lds for the packet
+		; init
+			ld hl, wPacketLoads
+			ld de, xPackets.palset
+			ld b, 16 ; load byte count into b
+		; reset pulse
+			ld a, MNEM_LD_HL_L
+			ld [hl+], a
+		.byteLoop ; read a byte
+			ld a, [de] ; fetch a byte
+			ld c, a ; and put it in c
+			inc de
+			push bc ; push byte count for later
+			ld b, 8 ; load bit count into b
+			.bitLoop ; process a bit
+				rr c ; shift bit out
+				ld a, (MNEM_LD_HL_B & MNEM_LD_HL_C) >> 1
+				adc a ; shift bit in
+					ASSERT MNEM_LD_HL_B ^ MNEM_LD_HL_C == %1
+				ld [hl+], a ; store
+				dec b ; repeat for all bits
+				jr nz, .bitLoop
+			pop bc ; restore byte count
+			dec b ; repeat for all bytes
+			jr nz, .byteLoop
+		; end bit
+			ld a, MNEM_LD_HL_B & MNEM_LD_HL_C
+			ld [hl+], a
 	jp PacketWait
 
 SECTION "data", ROMX
