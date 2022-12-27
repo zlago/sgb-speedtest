@@ -4,15 +4,15 @@ INCLUDE "defines.inc" ; mnems
 SECTION "ram plotter", ROM0
 RAMPlotter::
 	; place the delays
-		ld hl, wPacketDelayCode - 1
+		ld hl, wPacketDelayCode
 		ld de, wRAMCode
 		ld a, [wPacketDelayBytes]
-		inc a
 		ld b, a
 		ld c, 128 + 1 + 1
 	.delaysLoop
 		push bc
 			push hl
+				inc de
 				call ShortCpy
 			pop hl
 		pop bc
@@ -22,6 +22,7 @@ RAMPlotter::
 		ld hl, wPacketLoads
 		ld de, wRAMCode
 		ld a, [wPacketDelayBytes]
+		inc a
 		ld c, a
 		ld b, 128 + 1 + 1
 	.loadsLoop

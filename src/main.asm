@@ -91,7 +91,9 @@ Test::
 			; copy pulse length, b is preloaded with length
 			ld de, wPacketDelayCode
 			ld hl, wPulseCode
-			call ShortCpy
+			ld a, b
+			and a ; skip if zero
+			call nz, ShortCpy
 			; insert the pulse end
 			ld a, MNEM_LD_HL_H ; sets both P14 and P15 HIGH, ending the pulse
 			ld [de], a
@@ -99,7 +101,9 @@ Test::
 			; copy delay length
 			ld hl, wDelayCode
 			ld b, c ; restore delay bytes
-			call ShortCpy
+			ld a, c
+			and a ; skip if zero
+			call nz, ShortCpy
 	; plot lds for the packet
 		; init
 			ld hl, wPacketLoads

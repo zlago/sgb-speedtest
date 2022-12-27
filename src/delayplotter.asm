@@ -3,12 +3,13 @@ INCLUDE "defines.inc" ; mnemos
 
 SECTION "delay plotter", ROM0 ; a - delay (M-cycles)
 DelayPlotter::
+	ldh [hBytes], a ; set length
+	and a
+	ret z ; exit if zero
 	cp 10 ; check cycles
 	jr nc, .delayCall
 
 .delayNop ; if a < 10 delay with nops
-	; set length
-	ldh [hBytes], a
 	; fill code with nops
 	ld b, a
 	xor a
@@ -18,7 +19,7 @@ DelayPlotter::
 
 .delayCall ; if a > 10 delay with a CALL
 	ld b, a ; save for later
-	; set length
+	; set fixed length
 	ld a, 3
 	ldh [hBytes], a
 	; set mnemonic byte
