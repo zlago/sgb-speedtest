@@ -54,10 +54,12 @@ SECTION "variables", HRAM
 hPulse:: ds 1
 hDelay:: ds 1
 
-SECTION "vram", VRAM
+SECTION "vram", VRAM[_VRAM]
+align 4
 vScreen::
 	ds xScreen2bpp.end - xScreen2bpp
 	.end::
+align 4
 vFont::
 	ds xFont2bpp.end - xFont2bpp
 	.end::
