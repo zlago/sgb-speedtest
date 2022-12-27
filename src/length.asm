@@ -1,5 +1,8 @@
 INCLUDE "hardware.inc" ; defs
 
+DEF FONT_TILE EQUS "(vFont - _VRAM) >> 4" ; used when displaying
+DEF DELAY_SCRN EQU $996a
+DEF PULSE_SCRN EQU $998a
 SECTION "length update", ROM0
 ; reads joypad and updates the pulse/delay accordingly
 LengthUpdate::
@@ -47,7 +50,7 @@ LengthUpdate::
 		jr z, .skipRight
 		inc c ; increment if right pressed
 		.skipRight
-		; check for and process DOWN
+		; check for and process LEFT
 		ld a, PADF_LEFT
 		and b
 		jr z, .skipLeft
@@ -65,4 +68,40 @@ LengthUpdate::
 		.skipPulseUnder
 		ldh [hPulse], a
 		; done
+	; update the displayed tiles
+		ld e, $0f ; bitmask
+		ld d, FONT_TILE
+		; display delay
+			ld a, [hDelay]
+			ld hl, DELAY_SCRN
+			ld b, a ; low nibble
+			ld c, a
+			swap c ; high nibble
+			; display delay high
+			ld a, c
+			and e
+			add d
+			ld [hl+], a
+			; display delay low
+			ld a, b
+			and e
+			add d
+			ld [hl+], a
+		; display pulse
+			ld a, [hPulse]
+			ld hl, PULSE_SCRN
+			ld b, a ; low nibble
+			ld c, a
+			swap c ; high nibble
+			; display pulse high
+			ld a, c
+			and e
+			add d
+			ld [hl+], a
+			; display pulse low
+			ld a, b
+			and e
+			add d
+			ld [hl+], a
+	; done
 	ret
