@@ -19,12 +19,20 @@ Main::
 	; process length stuff
 	call LengthUpdate
 	; process nonlength stuff
-	ldh a, [hInput1]
-	ld b, a
-	ldh a, [hInput1.diff]
-	and b
-	ld b, a
+	; set a to newly pressed buttons
+		ldh a, [hInput1]
+		ld b, a
+		ldh a, [hInput1.diff]
+		and b
+	; if B pressed, reset palette
+	ld b, a ; save for later
 	and PADF_B
+	jp nz, Reset
+	; if A pressed, run test
+	ld a, b ; restore
+	and PADF_A
+	jp nz, Test
+	;loop
 	jr .loop
 
 SECTION "reset", ROM0
