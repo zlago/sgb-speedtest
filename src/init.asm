@@ -34,6 +34,9 @@ Init:: ; init code should go here
 	ldh [hPulse], a
 	ld a, 15 ; recommended pulse delay
 	ldh [hDelay], a
+	xor a ; reset input stuff
+	ldh [hInput1], a
+	ldh [hInput1.diff], a
 	; SGB init stuff
 		; wait a bit for SGB
 		ld a, 25
@@ -54,5 +57,8 @@ Init:: ; init code should go here
 			rept 4
 				halt
 				endr
-			; done
-			:jr:- ; endless loop
+	; finally set palette
+	ld a, $e4
+	ldh [rBGP], a
+	; done
+	jp Main

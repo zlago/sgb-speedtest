@@ -12,6 +12,10 @@ SECTION "header", ROM0[$100]
 	jp Init
 	ds $150-@ ; pad for header
 
+SECTION "main", ROM0
+Main::
+	:jr:- ; endless loop
+
 SECTION "data", ROMX
 xScreen2bpp::
 	incbin "screen.2bpp"
