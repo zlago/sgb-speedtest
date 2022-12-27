@@ -1,6 +1,7 @@
 ; 
 
 INCLUDE "hardware.inc" ; hardware definitions
+INCLUDE "macros.inc"
 INCLUDE "defines.inc" ; defines for.. things
 
 SECTION "vsync", ROM0[$40]
@@ -127,6 +128,12 @@ Test::
 		; end bit
 			ld a, MNEM_LD_HL_B & MNEM_LD_HL_C
 			ld [hl+], a
+	; plot the loads and delays
+		call RAMPlotter
+	; run
+		ld hl, rP1
+		lb bc, P1F_5, P1F_4
+		call wRAMCode
 	jp PacketWait
 
 SECTION "data", ROMX
