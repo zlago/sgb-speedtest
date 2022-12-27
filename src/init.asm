@@ -31,13 +31,19 @@ Init:: ; init code should go here
 		ld bc, xScreenTilemap.end - xScreenTilemap
 		call SafeCpy
 	; init variables
-	ld a, 5 ; recommended pulse length
-	ldh [hPulse], a
-	ld a, 15 ; recommended pulse delay
-	ldh [hDelay], a
-	xor a ; reset input stuff
-	ldh [hInput1], a
-	ldh [hInput1.diff], a
+		; init lenghts
+			ld a, 5 ; recommended pulse length
+			ldh [hPulse], a
+			ld a, 15 ; recommended pulse delay
+			ldh [hDelay], a
+		; reset input
+			xor a
+			ldh [hInput1], a
+			ldh [hInput1.diff], a
+		; clear delay plotter buffer
+			ld hl, hBytes
+			ld b, hCode.end - hBytes
+			call ShortSet
 	; SGB init stuff
 		; wait a bit for SGB
 		ld a, 25

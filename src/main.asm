@@ -83,6 +83,14 @@ hDelay:: ds 1
 ; used by delay plotter
 hBytes:: ds 1
 hCode:: ds 10
+	.end::
+
+SECTION "nopslide", ROM0, align[8]
+NopSlide::
+	rept 256 - 10
+		nop
+		endr
+	ret
 
 SECTION "code ram", WRAMX
 wRAMCode::
