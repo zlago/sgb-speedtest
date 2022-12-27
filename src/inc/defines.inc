@@ -36,3 +36,6 @@ DEF MNEM_LD_HL_L EQU $75
 DEF MNEM_LD_HL_A EQU $77
 DEF MNEM_CALL    EQU $cd
 DEF MNEM_RET     EQU $c9
+
+; used by all "hCode" type labels
+DEF DELAY_BYTES EQU 9

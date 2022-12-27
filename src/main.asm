@@ -58,22 +58,22 @@ Reset::
 SECTION "test", ROM0
 Test::
 	; plot delay code
-		; plot pulse length code
+		; plot delay code for pulses
 			ldh a, [hPulse]
-			sub 2
+			sub 2 ; ld overhead
 			call DelayPlotter
 			; copy to RAM
 			ld hl, hBytes
-			ld de, hPulseBytes
+			ld de, wPulseBytes
 			ld b, hCode.end - hBytes
 			call ShortCpy
-		; plot delay length code
+		; plot delay code for delays
 			ldh a, [hDelay]
-			sub 2
+			sub 2 ; ld overhead
 			call DelayPlotter
 			; copy to RAM
 			ld hl, hBytes
-			ld de, hDelayBytes
+			ld de, wDelayBytes
 			ld b, hCode.end - hBytes
 			call ShortCpy
 	; plot RAM code for the packet
@@ -113,9 +113,9 @@ SECTION "variables", HRAM
 ; pulse and delay lengths
 hPulse:: ds 1
 hDelay:: ds 1
-; used by delay plotter
+; used by the delay plotter
 hBytes:: ds 1
-hCode:: ds 10
+hCode:: ds DELAY_BYTES
 	.end::
 
 SECTION "nopslide", ROM0, align[8]
@@ -125,13 +125,20 @@ NopSlide::
 		endr
 	ret
 
-SECTION "delay code", WRAM0
+SECTION "plotter scratch pad", WRAM0
+; delay code for pulses
 wPulseBytes:: ds 1
-wPulseCode:: ds 10
+wPulseCode:: ds DELAY_BYTES
 	.end::
+; delay code for delays
 wDelayBytes:: ds 1
-wDelayCode:: ds 10
+wDelayCode:: ds DELAY_BYTES
 	.end::
+; final plotted delay code
+wPacketDelayBytes:: ds 1
+wPacketDelayCode:: ds (DELAY_BYTES * 2) + 1
+; bytes for LDs
+wPacketLoads:: ds 128 + 1 + 1
 
 SECTION "code ram", WRAMX
 wRAMCode::
