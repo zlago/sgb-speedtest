@@ -189,7 +189,7 @@ endc
 
 SECTION "joy", ROM0 ; wow this is such a mess
 Joy:: ; reads joypad, b - no. of joypads (if more than 1), clobbers (b)c, hl
-	ld hl, hP1
+	ld hl, hInput1
 	ld c, LOW(rP1)
 .loop
 	ld e, [hl] ; preserve for later
@@ -218,8 +218,8 @@ Joy:: ; reads joypad, b - no. of joypads (if more than 1), clobbers (b)c, hl
 
 SECTION "joypads", HRAM
 rept PLAYERS
-	hP{x:PLAYERS}:: ds 1
-	.x:: ds 1
+	hInput{x:PLAYERS}:: ds 1
+	.diff:: ds 1
 endr
 
 ; someone please if youre reading this remind me to
