@@ -1,6 +1,7 @@
 ; 
 
 INCLUDE "hardware.inc" ; hardware definitions
+INCLUDE "defines.inc" ; defines for.. things
 
 SECTION "vsync", ROM0[$40]
 	reti
@@ -21,6 +22,25 @@ xScreenTilemap::
 xFont2bpp::
 	incbin "font.2bpp"
 	.end::
+
+SECTION "packets", ROMX
+xPackets::
+.attr::
+db ATTR_DIV+1 ; divide
+db %11_11_11 ; all areas palette 3
+ds 16 - 2, $00 ; rest is whatever
+.palres::
+db PAL23+1
+dw $0000 ; color 0
+dw $0000, $0000, $0000 ; palette 2 (ignore)
+dw $0000, $7fff, $001f ; palette 3
+ds 16 - 15, $00 ; pad
+.palset::
+db PAL23+1
+dw $0000 ; color 0
+dw $0000, $0000, $0000 ; palette 2 (ignore)
+dw $0000, $7fff, $03e0 ; palette 3
+ds 16 - 15, $00 ; pad
 
 SECTION "variables", HRAM
 hPulse:: ds 1

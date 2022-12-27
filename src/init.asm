@@ -34,4 +34,25 @@ Init:: ; init code should go here
 	ldh [hPulse], a
 	ld a, 15 ; recommended pulse delay
 	ldh [hDelay], a
-	:jr:- ; endless loop
+	; SGB init stuff
+		; wait a bit for SGB
+		ld a, 25
+	.waitLoop
+		halt
+		dec a
+		jr nz, .waitLoop
+		; init SGB state
+			; attributes
+			ld hl, xPackets.attr
+			call Packet
+			rept 4
+				halt
+				endr
+			; palette
+			ld hl, xPackets.palres
+			call Packet
+			rept 4
+				halt
+				endr
+			; done
+			:jr:- ; endless loop
