@@ -14,7 +14,11 @@ SECTION "header", ROM0[$100]
 
 SECTION "main", ROM0
 Main::
-	:jr:- ; endless loop
+	.loop:
+	halt
+	call LengthUpdate
+	; check things
+	jr .loop
 
 SECTION "data", ROMX
 xScreen2bpp::
