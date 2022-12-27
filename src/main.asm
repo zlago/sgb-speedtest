@@ -14,6 +14,13 @@ SECTION "header", ROM0[$100]
 SECTION "init", ROM0
 Init: ; init code should go here
 	; init graphics
+		; init PPU registers
+		xor a ; 0 reset things
+		ldh [rSCY], a
+		ldh [rSCX], a
+		ldh [rBGP], a ; palette will be init later
+		ld a, LCDCF_ON | LCDCF_BGON | LCDCF_BLK01
+		ldh [rLCDC], a
 		; load tilemap
 		ld hl, xScreen2bpp
 		ld de, vScreen
