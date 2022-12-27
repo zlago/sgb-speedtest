@@ -35,14 +35,10 @@ Main::
 	;loop
 	jr .loop
 
-SECTION "reset", ROM0
-Reset::
-	; reset palette
-	ld hl, xPackets.palres
-	call Packet
-	; stall for 4 frames
+SECTION "packet wait", ROM0
+PacketWait:
 	ld a, 4
-	.loop
+.loop
 	halt
 	push af
 	call LengthUpdate
@@ -51,8 +47,37 @@ Reset::
 	jr nz, .loop
 	jp Main
 
+SECTION "reset", ROM0
+Reset::
+	; reset palette
+	ld hl, xPackets.palres
+	call Packet
+	; stall for 4 frames
+	jp PacketWait
+
 SECTION "test", ROM0
 Test::
+	; plot delay code
+		; plot pulse length code
+			ldh a, [hPulse]
+			sub 2
+			call DelayPlotter
+			; copy to RAM
+			ld hl, hBytes
+			ld de, hPulseBytes
+			ld b, hCode.end - hBytes
+			call ShortCpy
+		; plot delay length code
+			ldh a, [hDelay]
+			sub 2
+			call DelayPlotter
+			; copy to RAM
+			ld hl, hBytes
+			ld de, hDelayBytes
+			ld b, hCode.end - hBytes
+			call ShortCpy
+	; plot RAM code for the packet
+	jp PacketWait
 
 SECTION "data", ROMX
 xScreen2bpp::
@@ -99,6 +124,14 @@ NopSlide::
 		nop
 		endr
 	ret
+
+SECTION "delay code", WRAM0
+wPulseBytes:: ds 1
+wPulseCode:: ds 10
+	.end::
+wDelayBytes:: ds 1
+wDelayCode:: ds 10
+	.end::
 
 SECTION "code ram", WRAMX
 wRAMCode::
